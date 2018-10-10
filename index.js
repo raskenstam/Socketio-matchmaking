@@ -15,7 +15,7 @@ for (i=0; i <9; i++){
 currentlobbies[i]=new Array(10)
 }
 var newobject = {
-  name: "name", id: "id "
+  name: "asdasdas", mmr: 13
 
 }
 
@@ -27,13 +27,13 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
   socket.on('a', function (msg) {
     io.emit('welcome', msg);
-    addusertoarray("sure");
+    matchmaking(newobject);
   });
 });
 http.listen(port, function () {
   console.log('listening on *:' + port);
 });
-function addusertoarray(object) {
+function matchmaking(object) {
   var i = 0;
   var a = 0;
   while (i < 9) {
@@ -41,18 +41,41 @@ function addusertoarray(object) {
     while (a < 9) {
       
       if(currentlobbies[i][a]==undefined){
-        console.log(currentlobbies[i[a]]);
+        console.log(undefined+""+a+""+i);
         currentlobbies[i][a]=object;
         return;
       }
       else{
-        console.log("defined"+currentlobbies[i][a]+""+a);
+        console.log("defined"+currentlobbies[i][a].name+""+a+""+i);
       }
       a++
     }
     i++;
 
   }
+
+}
+//calculates the mmr for the lobby, mmr is number between 1-5 and avarage mmr is all in lobby avarage mmr
+function calculatemmr(lobby){
+  var totalmmr;
+  var playersinlobby;
+  a = 0;
+    while (a < 9) {
+      
+      if(currentlobbies[lobby][a]==undefined){
+        
+        currentlobbies[lobby][a]=object;
+        
+      }
+      else{
+        playersinlobby++;
+        console.log("defined"+currentlobbies[lobby][a]+""+a+""+lobby);
+        totalmmr= totalmmr + currentlobbies[lobby][a].mmr;
+      }
+      a++
+    }
+    return totalmmr/playersinlobby;
+  
 
 }
 /*function getfromdatabase(sql) {
