@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+   
+</head>
+
+<body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+
+        socket.on('welcome', function (msg) {
+            console.log("welcome");
+            
+            
+        });
+
+        function myFunction() {
+            socket.emit('a');
+        }
+    </script>
+   
+    <button onclick="myFunction()">Clickasdasdasdass me</button>
+</body>
+
+
+</html>
