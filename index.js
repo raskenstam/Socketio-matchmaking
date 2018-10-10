@@ -10,10 +10,13 @@ var con = mysql.createConnection({
 });
 
 */
+
+//creates a 2d array with 10 lobbies for 10 players
 var currentlobbies=new Array(10)
 for (i=0; i <9; i++){
 currentlobbies[i]=new Array(10)
 }
+//data that will be put in lobbyarray
 var newobject = {
   name: "asdasdas", mmr: 13
 
@@ -41,11 +44,13 @@ function matchmaking(object) {
     while (a < 9) {
       
       if(currentlobbies[i][a]==undefined){
+        console.log(calculatemmr(i));
         console.log(undefined+""+a+""+i);
         currentlobbies[i][a]=object;
         return;
       }
       else{
+        
         console.log("defined"+currentlobbies[i][a].name+""+a+""+i);
       }
       a++
@@ -57,24 +62,49 @@ function matchmaking(object) {
 }
 //calculates the mmr for the lobby, mmr is number between 1-5 and avarage mmr is all in lobby avarage mmr
 function calculatemmr(lobby){
-  var totalmmr;
-  var playersinlobby;
+  var totalmmr=0;
+  var playersinlobby=0;
   a = 0;
     while (a < 9) {
       
       if(currentlobbies[lobby][a]==undefined){
         
-        currentlobbies[lobby][a]=object;
+        
         
       }
       else{
         playersinlobby++;
         console.log("defined"+currentlobbies[lobby][a]+""+a+""+lobby);
         totalmmr= totalmmr + currentlobbies[lobby][a].mmr;
+        console.log("mmr"+totalmmr);
       }
       a++
     }
     return totalmmr/playersinlobby;
+  
+
+}
+function joinedplayers(lobby){
+  
+  var playersinlobby=0;
+  a = 0;
+    while (a < 9) {
+      
+      if(currentlobbies[lobby][a]==undefined){
+        
+        
+        
+      }
+      else{
+        playersinlobby++;
+        
+        
+       
+      }
+      a++
+    }
+    console.log("players in lobby "+lobby+" "+playersinlobby)
+    return playersinlobby;
   
 
 }
