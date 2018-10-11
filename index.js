@@ -26,6 +26,7 @@ app.get('/', function (req, res) {
 });
 io.on('connection', function (socket) {
   socket.on('a', function (msg) {
+    console.log("message: "+msg.mm+msg.na)
     io.emit('welcome', msg);
     var newobject = {
       name: "asdasdas", mmr: 13

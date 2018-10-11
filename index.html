@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-   
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 
 <body>
@@ -16,12 +16,36 @@
             
         });
 
-        function myFunction() {
-            socket.emit('a');
-        }
+       
     </script>
    
-    <button onclick="myFunction()">Clickasdasdasdass me</button>
+    
+
+    <div id="app">
+        
+        <input v-model="mmr" type="number">
+        <input v-model="name"><button v-on:click="searchgame">search game with mmr</button>
+        
+    </div>
+    
+    <script >
+    var app = new Vue({
+    el: '#app',
+    data: {
+        mmr: "1",
+        name: "name"
+      },
+    methods: {
+        searchgame: function () {
+            var send = {
+                na:this.name,mm:this.mmr
+
+            };
+            socket.emit('a',send);
+          }
+    }
+  })
+    </script>
 </body>
 
 
