@@ -17,10 +17,7 @@ for (i=0; i <9; i++){
 currentlobbies[i]=new Array(10)
 }
 //data that will be put in lobbyarray
-var newobject = {
-  name: "asdasdas", mmr: 13
 
-}
 
 var port = process.env.PORT || 3000;
 //todo startfunction if a server is ready reserve a place and check if user is ready. if user is ready add them to servertable.
@@ -30,23 +27,32 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
   socket.on('a', function (msg) {
     io.emit('welcome', msg);
-    matchmaking(newobject);
+    var newobject = {
+      name: "asdasdas", mmr: 13
+    
+    }
+    matchmaking(newobject,5,socket);
   });
 });
 http.listen(port, function () {
   console.log('listening on *:' + port);
 });
-function matchmaking(object) {
+//first param is the object with socketid,mmr and name
+function matchmaking(object,maxmmr,socket) {
   var i = 0;
   var a = 0;
   while (i < 9) {
     a = 0;
-    while (a < 9) {
+    //caluclate members and mmr here
+    while (a <= 9) {
       
       if(currentlobbies[i][a]==undefined){
         console.log(calculatemmr(i));
+        console.log(joinedplayers(i));
         console.log(undefined+""+a+""+i);
         currentlobbies[i][a]=object;
+        //joins the lobbynamespace
+        socket.join(i);
         return;
       }
       else{
@@ -107,6 +113,13 @@ function joinedplayers(lobby){
     return playersinlobby;
   
 
+}
+//will emit the ip and uri thngy to the players in the lobby when its ready
+function sendtoserver(lobby){
+
+}
+function abortlobbie(){
+  
 }
 /*function getfromdatabase(sql) {
 con.connect(function(err) {
