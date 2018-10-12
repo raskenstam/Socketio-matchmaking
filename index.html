@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
@@ -12,39 +13,50 @@
 
         socket.on('welcome', function (msg) {
             console.log("welcome");
-            
-            
+
+
         });
 
-       
+        socket.on('b', function (msg) {
+            console.log(+msg);
+            app.players = msg+"/10";
+
+        });
+        socket.on('startmatch', function (msg) {
+            console.log(+msg);
+            app.players = msg;
+
+        });
+
     </script>
-   
-    
+
+
 
     <div id="app">
-        
+
         <input v-model="mmr" type="number">
         <input v-model="name"><button v-on:click="searchgame">search game with mmr</button>
-        
+        <p style="white-space: pre-line;">{{ players }}</p>
     </div>
-    
-    <script >
-    var app = new Vue({
-    el: '#app',
-    data: {
-        mmr: "1",
-        name: "name"
-      },
-    methods: {
-        searchgame: function () {
-            var send = {
-                na:this.name,mm:this.mmr
 
-            };
-            socket.emit('a',send);
-          }
-    }
-  })
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                mmr: "1",
+                name: "name"
+                ,players:"0"
+            },
+            methods: {
+                searchgame: function () {
+                    var send = {
+                        na: this.name, mm: this.mmr
+
+                    };
+                    socket.emit('a', send);
+                }
+            }
+        })
     </script>
 </body>
 

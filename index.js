@@ -52,8 +52,20 @@ function matchmaking(object,maxmmr,socket) {
         console.log(joinedplayers(i));
         console.log(undefined+""+a+""+i);
         currentlobbies[i][a]=object;
-        //joins the lobbynamespace
-        socket.join(i);
+        //joins the lobbysocketioroom
+        socket.join("room-"+i);
+        if(joinedplayers(i)==10){
+          //startroundcode here
+          io.sockets.in("room-"+i).emit('startmatch', "10/10 join 666.666.666");
+        }
+        else{
+          io.sockets.in("room-"+i).emit('b', joinedplayers(i));
+        }
+        
+        
+       
+
+        
         return;
       }
       else{
@@ -95,7 +107,7 @@ function joinedplayers(lobby){
   
   var playersinlobby=0;
   a = 0;
-    while (a < 9) {
+    while (a <= 9) {
       
       if(currentlobbies[lobby][a]==undefined){
         
