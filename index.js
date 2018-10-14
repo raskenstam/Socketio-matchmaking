@@ -12,9 +12,9 @@ var con = mysql.createConnection({
 */
 
 //creates a 2d array with 10 lobbies for 10 players
-var currentlobbies=new Array(10)
-for (i=0; i <9; i++){
-currentlobbies[i]=new Array(10)
+var currentlobbies = new Array(10)
+for (i = 0; i < 9; i++) {
+  currentlobbies[i] = new Array(10)
 }
 //data that will be put in lobbyarray
 
@@ -26,113 +26,136 @@ app.get('/', function (req, res) {
 });
 io.on('connection', function (socket) {
   socket.on('a', function (msg) {
-    console.log("message: "+msg.mm+msg.na)
+
     io.emit('welcome', msg);
     var newobject = {
-      name: "asdasdas", mmr: 13
-    
+      name: "asdasdas", mmr: msg.mm
+
     }
-    matchmaking(newobject,5,socket);
+    matchmaking(newobject, 5, socket);
   });
 });
 http.listen(port, function () {
-  console.log('listening on *:' + port);
+
 });
 //first param is the object with socketid,mmr and name
-function matchmaking(object,maxmmr,socket) {
+function matchmaking(object, maxmmr, socket) {
   var i = 0;
   var a = 0;
   while (i < 9) {
     a = 0;
-    //caluclate members and mmr here
-    while (a <= 9) {
-      
-      if(currentlobbies[i][a]==undefined){
-        console.log(calculatemmr(i));
-        console.log(joinedplayers(i));
-        console.log(undefined+""+a+""+i);
-        currentlobbies[i][a]=object;
-        //joins the lobbysocketioroom
-        socket.join("room-"+i);
-        if(joinedplayers(i)==10){
-          //startroundcode here
-          io.sockets.in("room-"+i).emit('startmatch', "10/10 join 666.666.666");
-        }
-        else{
-          io.sockets.in("room-"+i).emit('b', joinedplayers(i));
-        }
-        
-        
-       
-
-        
-        return;
-      }
-      else{
-        
-        console.log("defined"+currentlobbies[i][a].name+""+a+""+i);
-      }
-      a++
+    var avaragmmr = calculatemmr(i);
+    if (isNaN(avaragmmr) == true) {
+      avaragmmr = object.mmr;
     }
+    
+    //todo add proper ifstatment
+
+
+
+   
+    var mmrlow =  parseInt(avaragmmr) + 5;
+    
+    var mmrhigh = parseInt(avaragmmr) - 5;
+    console.log("mmrhigh"+mmrhigh+"mmrlow "+mmrlow)
+    if (mmrhigh < object.mmr && mmrlow > object.mmr) {
+      while (a <= 9) {
+
+        if (currentlobbies[i][a] == undefined) {
+
+          console.log("joined lobby"+i)
+          currentlobbies[i][a] = object;
+          //joins the lobbysocketioroom
+          socket.join("room-" + i);
+          if (joinedplayers(i) == 10) {
+            //startroundcode here
+            io.sockets.in("room-" + i).emit('startmatch', "10/10 join 666.666.666");
+          }
+          else {
+            io.sockets.in("room-" + i).emit('b', joinedplayers(i));
+          }
+
+
+
+
+
+          return;
+        }
+       
+        a++
+      }
+    }
+    else {
+      console.log("nolobbyfou")
+    }
+
+
+
     i++;
 
   }
+  
 
 }
+
 //calculates the mmr for the lobby, mmr is number between 1-5 and avarage mmr is all in lobby avarage mmr
-function calculatemmr(lobby){
-  var totalmmr=0;
-  var playersinlobby=0;
+function calculatemmr(lobby) {
+  var totalmmr = 0;
+  var playersinlobby = 0;
+
   a = 0;
-    while (a < 9) {
-      
-      if(currentlobbies[lobby][a]==undefined){
-        
-        
-        
-      }
-      else{
-        playersinlobby++;
-        console.log("defined"+currentlobbies[lobby][a]+""+a+""+lobby);
-        totalmmr= totalmmr + currentlobbies[lobby][a].mmr;
-        console.log("mmr"+totalmmr);
-      }
-      a++
+  while (a < 8) {
+
+    if (currentlobbies[lobby][a] == undefined) {
+
+
+
     }
-    return totalmmr/playersinlobby;
-  
+    else {
+      playersinlobby++;
+
+      totalmmr = parseInt(totalmmr) + parseInt(currentlobbies[lobby][a].mmr);
+
+    }
+    a++
+  }
+
+  totalmmr = parseInt(totalmmr) / parseInt(playersinlobby);
+
+  return totalmmr;
+
 
 }
-function joinedplayers(lobby){
-  
-  var playersinlobby=0;
+function joinedplayers(lobby) {
+
+  var playersinlobby = 0;
   a = 0;
-    while (a <= 9) {
-      
-      if(currentlobbies[lobby][a]==undefined){
-        
-        
-        
-      }
-      else{
-        playersinlobby++;
-        
-        
-       
-      }
-      a++
+  while (a <= 9) {
+
+    if (currentlobbies[lobby][a] == undefined) {
+
+
+
     }
-    console.log("players in lobby "+lobby+" "+playersinlobby)
-    return playersinlobby;
-  
+    else {
+      playersinlobby++;
+
+
+
+    }
+    a++
+  }
+
+  return playersinlobby;
+
 
 }
 //will emit the ip and uri thngy to the players in the lobby when its ready
-function sendtoserver(lobby){
+function sendtoserver(lobby) {
 
 }
-function abortlobbie(){
-  
+function abortlobbie() {
+
 }
 /*function getfromdatabase(sql) {
 con.connect(function(err) {
